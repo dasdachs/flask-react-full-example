@@ -1,0 +1,23 @@
+{
+  "name": "flask-full-example",
+  "version": "1.0.0",
+  "description": "Root folder of a flask + reactJS example.",
+  "scripts": {
+    "start": "concurrently \"npm run start:server\" \"npm run start:client\"",
+    "start:client": "cd client && p",
+    "start:server": "cd server && npm run start",
+    "bootstrap": "concurrently \"npm run bootstrap:server\" \"npm run bootstrap:client\"",
+    "bootstrap:client": "cd client && npm run install",
+    "bootstrap:server": "cd server && poetry install"
+  },
+  "keywords": [
+    "react",
+    "flask",
+    "monorepo"
+  ],
+  "author": "Jani Šumak<jani.sumak@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "7.0.0"
+  }
+}
