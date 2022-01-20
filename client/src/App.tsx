@@ -1,25 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useLayoutEffect, useState } from "react";
+import { Route, Routes } from "react-router-dom";
+import { Navbar } from "./components/Navbar";
+import { Login } from "./pages/Login";
+import { PublicLists } from "./pages/PublicLists";
+import { AuthContext } from "./stores/AuthStore";
 
 function App() {
+  const [token, setToken] = useState("");
+
+  const addToken = (token: string) => {
+    setToken(token);
+  };
+
+  useLayoutEffect(() => {
+    const storedToken = localStorage.getItem("token");
+
+    if (storedToken) {
+      setToken(storedToken);
+    }
+  }, [setToken]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Navbar />
+      <main className="container">
+        <AuthContext.Provider value={{ token, addToken }}>
+          <Routes>
+            <Route path="login" element={<Login />} />
+            <Route index element={<PublicLists />} />
+          </Routes>
+        </AuthContext.Provider>
+      </main>
+    </>
   );
 }
 

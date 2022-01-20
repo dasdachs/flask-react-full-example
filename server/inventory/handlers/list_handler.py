@@ -1,6 +1,8 @@
 import json
+
 from flask import Blueprint, jsonify, abort, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from sqlalchemy.sql import or_
 
 from inventory import db
 from inventory.models import User, List
@@ -11,16 +13,25 @@ from inventory.seralizers import list_schema, lists_schema, items_schema, item_s
 lists_handler = Blueprint("list_handler", __name__, url_prefix="/api/v1/lists")
 
 
+@lists_handler.route("/public")
+def public_list():
+    try:
+        lists = List.query.filter_by(is_public=True).all()
+
+        return jsonify(lists_schema.dump(lists))
+    except:
+        abort(500)
+
 @lists_handler.route("", methods=["GET", "POST"])
 @jwt_required()
 def get_lists():
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(username=current_user).first()
+
+    if not user:
+        abort(403)
     if request.method == "POST":
-        current_user = get_jwt_identity()
-        user = User.query.filter_by(username=current_user).first()
-
-        if not user:
-            abort(403)
-
+    
         data = request.get_json()
 
         list_item = list_schema.load(data, session=db.session)
@@ -32,7 +43,7 @@ def get_lists():
         return jsonify(list_schema.dump(list_item)), 201
     else:
         try:
-            lists = List.query.all()
+            lists = List.query.filter(or_(user_id=user.id, is_public=True)).all()
 
             return jsonify(lists_schema.dump(lists))
         except:
