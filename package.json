@@ -4,9 +4,9 @@
   "description": "Root folder of a flask + reactJS example.",
   "scripts": {
     "start": "concurrently \"npm run start:server\" \"npm run start:client\"",
-    "start:client": "cd client && p",
+    "start:client": "cd client && poetry run flask run",
     "start:server": "cd server && npm run start",
-    "bootstrap": "concurrently \"npm run bootstrap:server\" \"npm run bootstrap:client\"",
+    "bootstrap": "concurrently \"npm install\" \"npm run bootstrap:server\" \"npm run bootstrap:client\"",
     "bootstrap:client": "cd client && npm run install",
     "bootstrap:server": "cd server && poetry install"
   },
