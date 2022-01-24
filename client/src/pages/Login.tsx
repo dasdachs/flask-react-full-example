@@ -3,7 +3,7 @@ import { Token } from "../interfaces/Api";
 import { AuthContext } from "../stores/AuthStore";
 
 export function Login() {
-  const { addToken } = useContext(AuthContext);
+  const { token, addToken } = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -30,9 +30,12 @@ export function Login() {
       });
   };
 
+  console.log(token);
+
   return (
     <form>
       <div className="mb-3">
+        {error && <div>{error}</div>}
         <label htmlFor="email" className="form-label">
           Email address
         </label>
